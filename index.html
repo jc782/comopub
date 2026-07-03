@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como's Pub Trips</title>
+  <meta name="description" content="All the pubs that Como has been to">
+
+  <!-- Retro Google Font for Monospace Metadata -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Icons via Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Retro Page Wrapper -->
+  <div class="page-container">
+
+    <!-- Top Decorative Banner -->
+    <div class="vintage-header-decor">
+      <div class="decor-stripe stripe-1"></div>
+      <div class="decor-stripe stripe-2"></div>
+      <div class="decor-stripe stripe-3"></div>
+    </div>
+
+    <!-- Main Header Panel -->
+    <header class="retro-panel main-header">
+      <div class="header-inner">
+        <!-- Profile Picture Frame (Web 1.0 style) -->
+        <div class="profile-frame">
+          <div class="img-wrapper">
+            <img src="photos/como.png" alt="Como the dog" id="como-avatar">
+          </div>
+          <div class="profile-caption">Meet Como</div>
+        </div>
+
+        <!-- Title & Subtitle Info -->
+        <div class="title-section">
+          <h1>COMO'S PUB VISITS</h1>
+          <p class="subtitle">He's a lucky boy!</p>
+        </div>
+      </div>
+
+      <!-- Stats Grid (Early 2000s Portal Stats) -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">TOTAL PUBS VISITED</div>
+          <div class="stat-value" id="stat-total">00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">UNIQUE PUBS VISITED</div>
+          <div class="stat-value" id="stat-locations">00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">MOST RECENT PUB DATE</div>
+          <div class="stat-value" id="stat-last-date">----</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Search and Filter Bar -->
+    <section class="retro-panel controls-panel">
+      <div class="controls-container">
+        <!-- Search Form -->
+        <div class="control-group search-group">
+          <label for="search-input">SEARCH_LOG://</label>
+          <div class="input-wrapper">
+            <input type="text" id="search-input" placeholder="Type pub name or location..." autocomplete="off">
+            <button id="clear-search" class="retro-btn" title="Reset Search">X</button>
+          </div>
+        </div>
+
+        <!-- Sorting Buttons -->
+        <div class="control-group sort-group">
+          <span class="control-label">SORT_ORDER:</span>
+          <div class="btn-group">
+            <button id="sort-newest" class="retro-btn active">NEWEST</button>
+            <button id="sort-oldest" class="retro-btn">OLDEST</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Stream -->
+    <main id="pubs-feed" class="feed-container">
+      <!-- Dynamic list of pubs will be generated here by app.js -->
+      <div class="loading-state">
+        [LOADING_PUB_DATABASE_RECORDS...]
+      </div>
+    </main>
+
+    <!-- Page Footer -->
+    <footer class="retro-panel main-footer">
+      <div class="footer-grid">
+        <div class="footer-notes">
+          <h3>SYSTEM INSTRUCTIONS</h3>
+          <p>To add a new pub to the log, edit <a href="pubs.js" class="retro-link">pubs.js</a> and upload a
+            photo to the <span class="file-path">/photos</span> folder.</p>
+        </div>
+      </div>
+      <div class="copyright">
+        © 2026 COMO
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Load Data and Main Script -->
+  <script src="pubs.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

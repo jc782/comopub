@@ -1,0 +1,587 @@
+/* ==========================================================================
+   COMO'S PUB LOG - DESIGN SYSTEM & STYLESHEET
+   Style: Noughties Retro (Structured, Tactile Borders, Modern Animations)
+   ========================================================================== */
+
+/* --- Custom Variables & Theme Tokens --- */
+:root {
+  --color-bg: #FAF6EE;         /* Warm vintage paper cream */
+  --color-panel: #FFFFFF;     /* Bright card background */
+  --color-panel-header: #EFEBE0; /* Vintage desktop menu gray */
+  --color-border: #1C1917;    /* Solid dark coal line */
+  --color-text: #292524;      /* High contrast dark text */
+  --color-text-muted: #57534E;/* Soft coal text */
+  --color-accent: #D97706;    /* Craft beer amber gold */
+  --color-accent-light: #FEF3C7; /* Soft amber highlight */
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+  --font-sans: 'Plus Jakarta Sans', Arial, sans-serif;
+  --border-width: 2px;
+}
+
+/* --- Base Resets & Document Setup --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 40px 20px;
+  background-image: 
+    radial-gradient(var(--color-panel-header) 1px, transparent 1px),
+    radial-gradient(var(--color-panel-header) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  overflow-x: hidden;
+}
+
+.page-container {
+  max-width: 850px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* --- Vintage Header Decoration Strip --- */
+.vintage-header-decor {
+  display: flex;
+  height: 12px;
+  border: var(--border-width) solid var(--color-border);
+  border-bottom: none;
+  background: var(--color-border);
+}
+.decor-stripe {
+  flex: 1;
+}
+.stripe-1 { background-color: var(--color-accent); }
+.stripe-2 { background-color: #B91C1C; } /* Vintage Red */
+.stripe-3 { background-color: #047857; } /* Vintage Forest Green */
+
+/* --- Retro Panel Base Layout --- */
+.retro-panel {
+  background-color: var(--color-panel);
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: 6px 6px 0px var(--color-border);
+  margin-bottom: 30px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* --- Main Header Panel --- */
+.main-header {
+  padding: 24px;
+}
+
+.header-inner {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Profile Picture Frame (Web 1.0 look) */
+.profile-frame {
+  flex-shrink: 0;
+  border: var(--border-width) solid var(--color-border);
+  padding: 5px;
+  background-color: var(--color-panel);
+  box-shadow: 4px 4px 0px var(--color-border);
+  width: 140px;
+  transition: transform 0.3s ease;
+}
+.profile-frame:hover {
+  transform: rotate(-2deg) scale(1.05);
+}
+.profile-frame .img-wrapper {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.profile-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.profile-caption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-align: center;
+  padding-top: 6px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+/* Title Section */
+.title-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.title-section h1 {
+  font-family: var(--font-serif);
+  font-size: 2.8rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+  color: var(--color-border);
+  border-bottom: 3px double var(--color-border);
+  padding-bottom: 4px;
+  text-shadow: 1px 1px 0px var(--color-accent);
+}
+.title-section .subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+}
+.ticker-box {
+  background-color: var(--color-panel-header);
+  border: 1px dashed var(--color-border);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+}
+.ticker-label {
+  color: var(--color-accent);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.ticker-text {
+  white-space: nowrap;
+  animation: scrollText 12s linear infinite;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(10%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: var(--border-width) solid var(--color-border);
+  padding-top: 24px;
+}
+
+@media (max-width: 500px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-panel);
+  box-shadow: 3px 3px 0px var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+.stat-header {
+  background-color: var(--color-panel-header);
+  border-bottom: var(--border-width) solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  letter-spacing: 0.5px;
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+  color: var(--color-border);
+  background-image: linear-gradient(to bottom, #fff, #faf9f6);
+}
+
+/* --- Search and Filter Controls --- */
+.controls-panel {
+  padding: 16px;
+}
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .controls-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.control-group label, .control-label {
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.search-group {
+  flex-grow: 1;
+}
+.input-wrapper {
+  display: flex;
+  width: 100%;
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
+  background: white;
+}
+.input-wrapper input {
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  width: 100%;
+  color: var(--color-text);
+}
+.input-wrapper input:focus {
+  outline: none;
+}
+#clear-search {
+  border: none;
+  border-left: var(--border-width) solid var(--color-border);
+  background: var(--color-panel-header);
+  font-family: var(--font-mono);
+  font-weight: bold;
+  padding: 0 12px;
+  cursor: pointer;
+  box-shadow: none;
+  transform: none;
+}
+#clear-search:hover {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+/* Retro Interactive Buttons */
+.retro-btn {
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-panel);
+  color: var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 6px 14px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px var(--color-border);
+  transform: translate(0, 0);
+  transition: background-color 0.1s, transform 0.1s, box-shadow 0.1s;
+}
+.retro-btn:hover {
+  background-color: var(--color-panel-header);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--color-border);
+}
+.retro-btn:active, .retro-btn.active {
+  background-color: var(--color-accent-light);
+  border-color: var(--color-border);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--color-border);
+}
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* --- Pubs Timeline / Cards --- */
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 40px;
+  border: var(--border-width) dashed var(--color-border);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+/* Individual Pub Cards */
+.pub-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pub-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pub-card-header {
+  background-color: var(--color-panel-header);
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pub-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pub-title-bar .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-border);
+  box-shadow: 1px 1px 0px var(--color-border);
+}
+.pub-card-header h2 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-border);
+}
+
+.pub-meta-list {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.pub-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  padding: 2px 8px;
+  box-shadow: 1.5px 1.5px 0px var(--color-border);
+}
+.pub-meta-item i {
+  color: var(--color-accent);
+}
+
+/* Card Body Layout */
+.pub-card-body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+@media (max-width: 680px) {
+  .pub-card-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Retro Photo Frame */
+.pub-photo-frame {
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-panel-header);
+  padding: 8px;
+  box-shadow: 4px 4px 0px var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+.pub-photo-header {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  color: var(--color-text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+.pub-photo-container {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background-color: #000;
+  position: relative;
+}
+.pub-photo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pub-photo-frame:hover img {
+  transform: scale(1.08);
+}
+
+/* Pub Details / Notes Content */
+.pub-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pub-notes-box {
+  background-color: #FAF9F6;
+  border: 1px dashed var(--color-border);
+  padding: 16px;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 16px;
+  position: relative;
+}
+.pub-notes-box::before {
+  content: '“';
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--color-accent-light);
+  z-index: 0;
+  pointer-events: none;
+}
+.pub-notes-box p {
+  position: relative;
+  z-index: 1;
+}
+
+/* Interactive stamp on card */
+.visited-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  border: 2px dashed var(--color-accent);
+  padding: 4px 8px;
+  align-self: flex-start;
+  transform: rotate(-3deg);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* --- Footer Panel --- */
+.main-footer {
+  padding: 24px;
+  margin-top: 50px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 20px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-notes h3 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.footer-notes p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+@media (max-width: 600px) {
+  .footer-meta {
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+.footer-meta p {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.file-path {
+  font-family: var(--font-mono);
+  background-color: var(--color-panel-header);
+  border: 1px solid var(--color-border);
+  padding: 1px 4px;
+  font-size: 0.8rem;
+}
+
+.retro-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  font-weight: bold;
+}
+.retro-link:hover {
+  color: var(--color-border);
+  background-color: var(--color-accent-light);
+}
+
+/* Web 1.0 Retro Badge / Hit Counter */
+.retro-badge {
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: 2px 2px 0px var(--color-border);
+}
+.badge-tag {
+  background-color: var(--color-border);
+  color: #fff;
+  padding: 4px 8px;
+  font-weight: bold;
+}
+.badge-count {
+  background-color: #000;
+  color: #10B981; /* Retro Green LCD look */
+  padding: 4px 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.copyright {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
