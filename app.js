@@ -78,15 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Total Pubs Visited
     statTotal.textContent = String(PUBS_DATA.length).padStart(2, '0');
 
-    // 2. Unique Cities/Locations
-    // Extract the city name (usually after comma, or whole location if no comma)
-    const cities = PUBS_DATA.map(pub => {
-      const parts = pub.location.split(',');
-      // Take the last part (e.g. London or Oxfordshire) or the full string if no comma
-      return parts[parts.length - 1].trim();
-    });
-    const uniqueCities = new Set(cities);
-    statLocations.textContent = String(uniqueCities.size).padStart(2, '0');
+    // 2. Unique Pubs
+    // Count unique establishments based on name and location combination
+    const uniquePubs = new Set(PUBS_DATA.map(pub => {
+      return `${pub.name.trim().toLowerCase()} | ${pub.location.trim().toLowerCase()}`;
+    }));
+    statLocations.textContent = String(uniquePubs.size).padStart(2, '0');
 
     // 3. Last Crawl Date (formatted as YYYY/MM/DD)
     const dates = PUBS_DATA.map(pub => new Date(pub.date));

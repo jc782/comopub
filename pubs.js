@@ -47,7 +47,7 @@ const PUBS_DATA = [
     name: "The Dophin",
     date: "2026-05-04",
     location: "Beer",
-    photo: "photos/doplhin.jpg",
+    photo: "photos/dolphin.jpg",
     notes: "Como 's first trip to the beach! He did get mistaken for a sausage dog though."
   },
   {
