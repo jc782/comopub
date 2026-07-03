@@ -198,7 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>${pub.notes}</p>
           </div>
           <div class="visited-stamp">
-            [APPROVED.BY.COMO]
+            <i data-lucide="paw-print" size="14"></i>
+            <span>[APPROVED.BY.COMO]</span>
           </div>
         </div>
       </div>

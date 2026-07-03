@@ -482,6 +482,9 @@ body {
 
 /* Interactive stamp on card */
 .visited-stamp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--color-accent);

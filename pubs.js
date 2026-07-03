@@ -52,10 +52,10 @@ const PUBS_DATA = [
   },
   {
     name: "The Haymakers",
-    date: "2026-04-xx",
+    date: "2026-04-02",
     location: "Cambridge",
     photo: "",
-    notes: "Como's first ever trip to the pub. His local."
+    notes: "Date tbc - Como's first ever trip to the pub. His local."
   },
   {
     name: "The Plough (Debden)",
