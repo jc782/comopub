@@ -86,14 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
     statLocations.textContent = String(uniquePubs.size).padStart(2, '0');
 
-    // 3. Last Crawl Date (formatted as YYYY/MM/DD)
-    const dates = PUBS_DATA.map(pub => new Date(pub.date));
+    // 3. Last Crawl Date (formatted as Month Year)
+    const dates = PUBS_DATA.map(pub => new Date(pub.date.includes('T') ? pub.date : pub.date + 'T00:00:00'));
     const maxDate = new Date(Math.max(...dates));
     if (!isNaN(maxDate)) {
-      const formattedDate = maxDate.toISOString().split('T')[0].replace(/-/g, '/');
-      statLastDate.textContent = formattedDate;
+      statLastDate.textContent = maxDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'short' });
     } else {
-      statLastDate.textContent = '----/--/--';
+      statLastDate.textContent = '---- --';
     }
   }
 
@@ -151,12 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.createElement('article');
     card.className = 'retro-panel pub-card';
 
-    // Format display date
+    // Format display date (Month and Year only)
     let displayDate = pub.date;
     try {
-      const d = new Date(pub.date);
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
-      displayDate = d.toLocaleDateString('en-GB', options); // e.g. "28 Jun 2026"
+      const d = new Date(pub.date.includes('T') ? pub.date : pub.date + 'T00:00:00');
+      const options = { year: 'numeric', month: 'short' };
+      displayDate = d.toLocaleDateString('en-GB', options); // e.g. "Jun 2026"
     } catch (e) {
       console.warn('Could not parse date:', pub.date);
     }
