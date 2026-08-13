@@ -439,7 +439,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!selectedFileBase64) {
+      if (!selectedFileBase64 && photoInput.files[0]) {
+        showStatus('[OPTIMIZING_IMAGE...]', 'loading');
+        try {
+          selectedFileName = photoInput.files[0].name.replace(/\.[^/.]+$/, "") + ".jpg";
+          selectedFileBase64 = await compressImage(photoInput.files[0], 800, 0.75);
+        } catch (err) {
+          showStatus('[ERROR: COULD_NOT_PROCESS_IMAGE]', 'error');
+          return;
+        }
+      } else if (!selectedFileBase64) {
         showStatus('[ERROR: PLEASE_ATTACH_PHOTO]', 'error');
         return;
       }
