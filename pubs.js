@@ -9,6 +9,20 @@
 
 const PUBS_DATA = [
   {
+    name: "Test Pub Compressed",
+    date: "2026-08-13",
+    location: "Cambridge",
+    photo: "photos/test-pub-compressed.jpg",
+    notes: "Test"
+  },
+  {
+    name: "Test Pub",
+    date: "2026-08-13",
+    location: "Cambridge",
+    photo: "photos/test-pub.png",
+    notes: "Test"
+  },
+  {
     name: "The Boathouse",
     date: "2026-06-23",
     location: "Cambridge",
