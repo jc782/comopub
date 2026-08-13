@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
       previewName.textContent = file.name;
       showStatus('[OPTIMIZING_IMAGE...]', 'loading');
 
-      compressImage(file, 800, 0.75)
+      compressImage(file)
         .then((compressedBase64) => {
           selectedFileBase64 = compressedBase64;
           previewImg.src = compressedBase64;
@@ -376,39 +376,63 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * Compress and downscale uploaded photo to fit within GitHub's 64KB payload limit
+     * Compress and downscale uploaded photo to fit strictly within GitHub's 64KB payload limit (~48KB Base64 limit).
      */
-    function compressImage(file, maxWidth = 800, quality = 0.75) {
-      return new Promise((resolve, reject) => {
+    async function compressImage(file, maxTargetBase64Length = 48000) {
+      const img = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Export as JPEG compressed string
-            const dataUrl = canvas.toDataURL('image/jpeg', quality);
-            resolve(dataUrl);
-          };
-          img.onerror = (err) => reject(err);
-          img.src = e.target.result;
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = (err) => reject(err);
+          image.src = e.target.result;
         };
         reader.onerror = (err) => reject(err);
         reader.readAsDataURL(file);
       });
+
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d');
+
+      let width = img.width;
+      let height = img.height;
+
+      // Start with reasonable max dimension
+      let maxDim = 600;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      let quality = 0.70;
+      let dataUrl = canvas.toDataURL('image/jpeg', quality);
+
+      // Iteratively reduce quality and/or dimensions until dataUrl fits under limit
+      while (dataUrl.length > maxTargetBase64Length && (quality > 0.15 || maxDim > 200)) {
+        if (quality > 0.25) {
+          quality -= 0.10;
+        } else {
+          maxDim = Math.round(maxDim * 0.8);
+          width = Math.round(width * 0.8);
+          height = Math.round(height * 0.8);
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          quality = 0.50;
+        }
+        dataUrl = canvas.toDataURL('image/jpeg', quality);
+      }
+
+      return dataUrl;
     }
 
     // Status Helpers
@@ -443,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showStatus('[OPTIMIZING_IMAGE...]', 'loading');
         try {
           selectedFileName = photoInput.files[0].name.replace(/\.[^/.]+$/, "") + ".jpg";
-          selectedFileBase64 = await compressImage(photoInput.files[0], 800, 0.75);
+          selectedFileBase64 = await compressImage(photoInput.files[0]);
         } catch (err) {
           showStatus('[ERROR: COULD_NOT_PROCESS_IMAGE]', 'error');
           return;
@@ -496,10 +520,18 @@ document.addEventListener('DOMContentLoaded', () => {
           }, 1500);
         } else {
           submitBtn.disabled = false;
+          console.error('GitHub API Worker error details:', resData);
+
           if (resData.error === 'INVALID_PASSWORD') {
             showStatus('[ERROR: INVALID_ADMIN_PASSWORD]', 'error');
           } else {
-            showStatus(`[ERROR: ${resData.error || resData.details || 'DISPATCH_FAILED'}]`, 'error');
+            let detailStr = resData.details || resData.error || 'DISPATCH_FAILED';
+            try {
+              const parsed = JSON.parse(resData.details);
+              if (parsed.message) detailStr = parsed.message;
+            } catch(e) {}
+            const statusCode = resData.status ? ` ${resData.status}` : '';
+            showStatus(`[ERROR${statusCode}: ${detailStr}]`, 'error');
           }
         }
       } catch (err) {
