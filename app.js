@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateStats();
   renderPubs();
   setupTicker();
+  setupPubSubmissionModal();
 
   // --- Event Listeners ---
   searchInput.addEventListener('input', (e) => {
@@ -287,4 +288,177 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }, 5000);
   }
+
+  /**
+   * Submission Modal Controller
+   */
+  function setupPubSubmissionModal() {
+    const openBtn = document.getElementById('open-pub-modal-btn');
+    const footerTrigger = document.getElementById('footer-modal-trigger');
+    const closeBtn = document.getElementById('close-modal-btn');
+    const cancelBtn = document.getElementById('cancel-modal-btn');
+    const modalOverlay = document.getElementById('pub-modal');
+    const form = document.getElementById('pub-form');
+
+    const photoInput = document.getElementById('pub-photo');
+    const previewBox = document.getElementById('photo-preview-box');
+    const previewImg = document.getElementById('photo-preview-img');
+    const previewName = document.getElementById('photo-preview-name');
+
+    const workerUrlInput = document.getElementById('worker-url');
+    const repoOwnerInput = document.getElementById('repo-owner');
+    const pubDateInput = document.getElementById('pub-date');
+    const statusConsole = document.getElementById('pub-modal-status');
+    const statusText = document.getElementById('status-text');
+    const submitBtn = document.getElementById('submit-pub-btn');
+
+    if (!modalOverlay || !form) return;
+
+    // Restore saved worker URL and username from localStorage
+    const savedWorkerUrl = localStorage.getItem('como_worker_url');
+    const savedRepoOwner = localStorage.getItem('como_repo_owner');
+    if (savedWorkerUrl) workerUrlInput.value = savedWorkerUrl;
+    if (savedRepoOwner) repoOwnerInput.value = savedRepoOwner;
+
+    // Helper to open modal
+    function openModal() {
+      // Set default date to today
+      if (!pubDateInput.value) {
+        pubDateInput.value = new Date().toISOString().split('T')[0];
+      }
+      modalOverlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Helper to close modal
+    function closeModal() {
+      modalOverlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      hideStatus();
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (footerTrigger) footerTrigger.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // File Preview Handler
+    let selectedFileBase64 = null;
+    let selectedFileName = '';
+
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) {
+        previewBox.classList.add('hidden');
+        selectedFileBase64 = null;
+        selectedFileName = '';
+        return;
+      }
+
+      selectedFileName = file.name;
+      previewName.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        selectedFileBase64 = event.target.result;
+        previewImg.src = selectedFileBase64;
+        previewBox.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Status Helpers
+    function showStatus(text, type = 'loading') {
+      statusConsole.className = `modal-status-console status-${type}`;
+      statusText.textContent = text;
+      statusConsole.classList.remove('hidden');
+    }
+
+    function hideStatus() {
+      statusConsole.classList.add('hidden');
+    }
+
+    // Form Submit Handler
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('pub-name').value.trim();
+      const date = pubDateInput.value;
+      const location = document.getElementById('pub-location').value.trim();
+      const notes = document.getElementById('pub-notes').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const workerUrl = workerUrlInput.value.trim();
+      const repoOwner = repoOwnerInput.value.trim();
+
+      if (!name || !date || !location || !password || !workerUrl || !repoOwner) {
+        showStatus('[ERROR: MISSING_REQUIRED_FIELDS]', 'error');
+        return;
+      }
+
+      if (!selectedFileBase64) {
+        showStatus('[ERROR: PLEASE_ATTACH_PHOTO]', 'error');
+        return;
+      }
+
+      // Save worker settings for convenience
+      localStorage.setItem('como_worker_url', workerUrl);
+      localStorage.setItem('como_repo_owner', repoOwner);
+
+      showStatus('[ENCODING_IMAGE_PAYLOAD...]', 'loading');
+      submitBtn.disabled = true;
+
+      try {
+        showStatus('[CONNECTING_TO_WORKER_RELAY...]', 'loading');
+
+        const response = await fetch(workerUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            date,
+            location,
+            notes,
+            photoName: selectedFileName,
+            photoBase64: selectedFileBase64,
+            password,
+            repoOwner,
+            repoName: 'comopub'
+          }),
+        });
+
+        const resData = await response.json();
+
+        if (response.ok && resData.success) {
+          showStatus('[SUCCESS! GITHUB_ACTION_TRIGGERED]', 'success');
+          
+          setTimeout(() => {
+            alert(`🎉 Success! Pub trip to "${name}" has been logged.\n\nGitHub Action is updating the repository and GitHub Pages will deploy the change in ~1 minute.`);
+            form.reset();
+            previewBox.classList.add('hidden');
+            selectedFileBase64 = null;
+            submitBtn.disabled = false;
+            closeModal();
+          }, 1500);
+        } else {
+          submitBtn.disabled = false;
+          if (resData.error === 'INVALID_PASSWORD') {
+            showStatus('[ERROR: INVALID_ADMIN_PASSWORD]', 'error');
+          } else {
+            showStatus(`[ERROR: ${resData.error || resData.details || 'DISPATCH_FAILED'}]`, 'error');
+          }
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        console.error('Submission failed:', err);
+        showStatus(`[NETWORK_ERROR: COULD_NOT_CONNECT_TO_WORKER]`, 'error');
+      }
+    });
+  }
 });
+

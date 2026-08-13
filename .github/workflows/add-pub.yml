@@ -1,0 +1,72 @@
+name: Add New Pub Entry
+
+on:
+  repository_dispatch:
+    types: [add_new_pub]
+
+jobs:
+  add-pub:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Add Pub and Photo
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const payload = context.payload.client_payload;
+            const { name, date, location, notes, photoName, photoBase64 } = payload;
+
+            if (!name || !date || !location || !photoName || !photoBase64) {
+              core.setFailed("Missing required pub payload fields.");
+              return;
+            }
+
+            // 1. Sanitize file extension & filename
+            const extMatch = photoName.match(/\.(png|jpg|jpeg|gif|webp)$/i);
+            const ext = extMatch ? extMatch[0].toLowerCase() : '.png';
+            
+            const sanitizedBaseName = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+            const photoFileName = `${sanitizedBaseName}${ext}`;
+            const photoPath = path.join('photos', photoFileName);
+
+            // 2. Decode and write photo file
+            // Remove base64 data URL prefix if present
+            const cleanBase64 = photoBase64.replace(/^data:image\/\w+;base64,/, '');
+            const imageBuffer = Buffer.from(cleanBase64, 'base64');
+            fs.writeFileSync(photoPath, imageBuffer);
+            console.log(`Saved photo to ${photoPath}`);
+
+            // 3. Read and update pubs.js
+            const pubsFilePath = 'pubs.js';
+            let content = fs.readFileSync(pubsFilePath, 'utf8');
+
+            const photoRelPath = `photos/${photoFileName}`;
+            const newEntry = `  {\n    name: ${JSON.stringify(name)},\n    date: ${JSON.stringify(date)},\n    location: ${JSON.stringify(location)},\n    photo: ${JSON.stringify(photoRelPath)},\n    notes: ${JSON.stringify(notes || "")}\n  },`;
+
+            if (content.includes('const PUBS_DATA = [')) {
+              content = content.replace('const PUBS_DATA = [', `const PUBS_DATA = [\n${newEntry}`);
+              fs.writeFileSync(pubsFilePath, content);
+              console.log(`Successfully added "${name}" to ${pubsFilePath}`);
+            } else {
+              core.setFailed("Could not locate 'const PUBS_DATA = [' in pubs.js");
+            }
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "Como Pub Bot"
+          git config --global user.email "bot@comopub.com"
+          git add photos/ pubs.js
+          git commit -m "Add pub entry: ${{ github.event.client_payload.name }}"
+          git push

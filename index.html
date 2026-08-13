@@ -78,13 +78,16 @@
           </div>
         </div>
 
-        <!-- Sorting Buttons -->
+        <!-- Sorting Buttons & Add Pub Trigger -->
         <div class="control-group sort-group">
           <span class="control-label">SORT_ORDER:</span>
           <div class="btn-group">
             <button id="sort-newest" class="retro-btn active">NEWEST</button>
             <button id="sort-oldest" class="retro-btn">OLDEST</button>
           </div>
+          <button id="open-pub-modal-btn" class="retro-btn accent-btn" title="Log a new pub trip">
+            <i data-lucide="plus-circle" size="14"></i> + LOG PUB
+          </button>
         </div>
       </div>
     </section>
@@ -102,8 +105,7 @@
       <div class="footer-grid">
         <div class="footer-notes">
           <h3>SYSTEM INSTRUCTIONS</h3>
-          <p>To add a new pub to the log, edit <a href="pubs.js" class="retro-link">pubs.js</a> and upload a
-            photo to the <span class="file-path">/photos</span> folder.</p>
+          <p>To add a new pub to the log, use the <button id="footer-modal-trigger" class="retro-link-btn">+ LOG PUB</button> form or edit <a href="pubs.js" class="retro-link">pubs.js</a>.</p>
         </div>
       </div>
       <div class="copyright">
@@ -111,6 +113,89 @@
       </div>
     </footer>
 
+  </div>
+
+  <!-- Retro Submission Modal -->
+  <div id="pub-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="retro-panel modal-panel">
+      <!-- Modal Header Bar -->
+      <div class="modal-header">
+        <div class="modal-title-bar">
+          <div class="dot"></div>
+          <h2 id="modal-title">LOG_NEW_ESTABLISHMENT //</h2>
+        </div>
+        <button id="close-modal-btn" class="retro-btn modal-close-btn" title="Close Modal">X</button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="pub-form" class="modal-body">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="pub-name">PUB_NAME:*</label>
+            <input type="text" id="pub-name" class="retro-input" placeholder="e.g. The Eagle" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="pub-date">VISIT_DATE:*</label>
+            <input type="date" id="pub-date" class="retro-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pub-location">LOCATION:*</label>
+          <input type="text" id="pub-location" class="retro-input" placeholder="e.g. Bene't Street, Cambridge" required>
+        </div>
+
+        <div class="form-group">
+          <label for="pub-notes">NOTES & MEMORIES:</label>
+          <textarea id="pub-notes" class="retro-textarea" rows="3" placeholder="Describe Como's experience, belly rubs, or drinks..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="pub-photo">PHOTO_ATTACHMENT:*</label>
+          <div class="file-upload-wrapper">
+            <input type="file" id="pub-photo" class="retro-file-input" accept="image/*" required>
+            <div id="photo-preview-box" class="photo-preview-container hidden">
+              <img id="photo-preview-img" src="" alt="Selected photo preview">
+              <span id="photo-preview-name" class="preview-filename">filename.png</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="admin-password">ADMIN_PASSWORD:*</label>
+            <input type="password" id="admin-password" class="retro-input" placeholder="Enter password" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="worker-url">WORKER_API_URL:* <span class="label-help" title="URL of your Cloudflare Worker relay">(?)</span></label>
+            <input type="url" id="worker-url" class="retro-input" value="https://lingering-frost-021a.joshcarr3007.workers.dev" placeholder="https://lingering-frost-021a.joshcarr3007.workers.dev" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="repo-owner">GITHUB_USERNAME:*</label>
+            <input type="text" id="repo-owner" class="retro-input" value="jc782" placeholder="e.g. jc782" required>
+          </div>
+        </div>
+
+        <!-- Terminal Status Output Console -->
+        <div id="pub-modal-status" class="modal-status-console hidden">
+          <div class="status-indicator"></div>
+          <span id="status-text">[READY_FOR_DISPATCH]</span>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="modal-actions">
+          <button type="button" id="cancel-modal-btn" class="retro-btn">CANCEL</button>
+          <button type="submit" id="submit-pub-btn" class="retro-btn accent-btn">
+            <i data-lucide="send" size="14"></i> SUBMIT TO LOG
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Load Data and Main Script -->
