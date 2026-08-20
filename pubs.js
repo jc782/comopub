@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "Byron’s bear",
+    date: "2026-08-20",
+    location: "Cambridge",
+    photo: "photos/byron-s-bear.jpg",
+    notes: "What a treat to go to the pub with my friends. Happy 8months!"
+  },
+  {
     name: "The rising sun",
     date: "2026-08-04",
     location: "Cleeve Hill",
