@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "The Dolphin",
+    date: "2026-08-30",
+    location: "Beer",
+    photo: "photos/the-dolphin.jpg",
+    notes: "A return visit to the Dolphin, no rope to chew this time booo but at least my friends were there"
+  },
+  {
     name: "Byron’s bear",
     date: "2026-08-20",
     location: "Cambridge",
