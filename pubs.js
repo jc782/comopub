@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "The Old Spring",
+    date: "2026-04-17",
+    location: "Cambridge",
+    photo: "photos/the-old-spring.jpg",
+    notes: "Got lots of compliments from other pub goers and enjoyed gnawing at the floorboards (shhh no one saw)"
+  },
+  {
     name: "The Crown",
     date: "2026-04-03",
     location: "Stoke By Nayland",
