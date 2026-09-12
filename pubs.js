@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "The Crown",
+    date: "2026-04-03",
+    location: "Stoke By Nayland",
+    photo: "photos/the-crown.jpg",
+    notes: "A 'good' Friday walk up the hill (a new concept) to the pub for dinner. Some tasty under the table treats."
+  },
+  {
     name: "The Dolphin",
     date: "2026-08-30",
     location: "Beer",
