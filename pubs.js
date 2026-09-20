@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "The Granta",
+    date: "2026-09-20",
+    location: "Cambridge",
+    photo: "photos/the-granta.jpg",
+    notes: "Wowza! Deez humanz left tonnes of yummy snacks at my schnoz level. Loved it, 10/10 would return."
+  },
+  {
     name: "The Old Spring",
     date: "2026-04-17",
     location: "Cambridge",
