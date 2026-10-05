@@ -9,6 +9,13 @@
 
 const PUBS_DATA = [
   {
+    name: "The Red Lion",
+    date: "2026-10-04",
+    location: "Grantchester",
+    photo: "photos/the-red-lion.jpg",
+    notes: "Top notch pub with top notch grub. Fab day with the fam and i roamed free after chewing through my lead."
+  },
+  {
     name: "The Granta",
     date: "2026-09-20",
     location: "Cambridge",
